@@ -1,7 +1,7 @@
 astrails-safe
 =============
 
-Simple database and filesystem backups with S3 support (with optional encryption)
+Simple database and filesystem backups with S3 and Rackspace Cloudfiles support (with optional encryption)
 
 Home: github.com/astrails/safe
 
@@ -15,8 +15,9 @@ We needed a backup solution that will satisfy the following requirements:
 * support for simple ‘tar’ backups of directories (with includes/excludes)
 * support for simple mysqldump of mysql databases
 * support for symmetric or public key encryption
-* support for local filesystem and Amazon S3 for storage
+* support for local filesystem and Amazon S3 for storage and Rackspace Cloudfile storage
 * support for backup rotation. we don’t want backups filling all the diskspace or cost a fortune on S3
+* email notification on backup failure with error and backtrace
 
 And since we didn't find any, we wrote our own :)
 

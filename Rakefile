@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "safe"
-    gem.summary = %Q{Backup filesystem and databases (MySQL and PostgreSQL) to Amazon S3 (with encryption)}
-    gem.description = "Simple tool to backup databases (MySQL and PostgreSQL) and filesystem locally or to Amazon S3 (with optional encryption)"
+    gem.summary = %Q{Backup filesystem and databases (MySQL and PostgreSQL) to Amazon S3 or Rackspace Cloudfiles (with encryption)}
+    gem.description = "Simple tool to backup databases (MySQL and PostgreSQL) and filesystem locally or to Amazon S3 or Rackspace Cloudfiles (with optional encryption)"
     gem.email = "we@astrails.com"
     gem.homepage = "http://github.com/astrails/safe"
     gem.authors  = ["Astrails Ltd.", "Mark Mansour"]
@@ -14,6 +14,7 @@ begin
 
     gem.add_dependency("aws-s3")
     gem.add_dependency("net-sftp")
+    gem.add_dependency("rackspace-cloudfiles")
 
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
