@@ -3,6 +3,7 @@ require 'cloudfiles'
 require 'net/sftp'
 require 'fileutils'
 require 'benchmark'
+require 'net/smtp'
 
 require 'yaml'
 
@@ -36,6 +37,7 @@ require File.dirname(__FILE__) + '/safe/s3'
 require File.dirname(__FILE__) + '/safe/sftp'
 
 require File.dirname(__FILE__) + '/safe/rcloud'
+require File.dirname(__FILE__) + '/safe/notification'
 
 module Astrails
   module Safe
@@ -45,19 +47,23 @@ module Astrails
       config = Config::Node.new(&block)
       #config.dump
       
-      [[Mysqldump, [:mysqldump, :databases]],
-       [Pgdump,    [:pgdump,    :databases]],
-       [Archive,   [:tar,       :archives]],
-       [Svndump,   [:svndump,   :repos]]
-      ].each do |klass, path|
-        if collection = config[*path]
-          collection.each do |name, config|
-            klass.new(name, config).backup.run(config, :gpg, :gzip, :local, :s3, :sftp, :rcloud)
+      begin
+        [[Mysqldump, [:mysqldump, :databases]],
+         [Pgdump,    [:pgdump,    :databases]],
+         [Archive,   [:tar,       :archives]],
+         [Svndump,   [:svndump,   :repos]]
+        ].each do |klass, path|
+          if collection = config[*path]
+            collection.each do |name, config|
+              klass.new(name, config).backup.run(config, :gpg, :gzip, :local, :s3, :sftp, :rcloud)
+            end
           end
         end
-      end
 
-      Astrails::Safe::TmpFile.cleanup
+        Astrails::Safe::TmpFile.cleanup
+      rescue Exception => e
+        Notification.new(config, e).send_failure
+      end
     end
     module_function :safe
   end
