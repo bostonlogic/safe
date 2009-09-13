@@ -62,6 +62,7 @@ module Astrails
 
         Astrails::Safe::TmpFile.cleanup
       rescue Exception => e
+        puts e.to_yaml if $DRY_RUN || $_VERBOSE
         Notification.new(config, e).send_failure
       end
     end
