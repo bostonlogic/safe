@@ -1,36 +1,41 @@
 require "aws/s3"
+require 'cloudfiles'
 require 'net/sftp'
 require 'fileutils'
 require 'benchmark'
 
+require 'yaml'
+
 require 'tempfile'
-require 'extensions/mktmpdir'
+require File.dirname(__FILE__) + '/../extensions/mktmpdir'
 
-require 'astrails/safe/tmp_file'
+require File.dirname(__FILE__) + '/safe/tmp_file'
 
-require 'astrails/safe/config/node'
-require 'astrails/safe/config/builder'
+require File.dirname(__FILE__) + '/safe/config/node'
+require File.dirname(__FILE__) + '/safe/config/builder'
 
-require 'astrails/safe/stream'
+require File.dirname(__FILE__) + '/safe/stream'
 
-require 'astrails/safe/backup'
+require File.dirname(__FILE__) + '/safe/backup'
 
-require 'astrails/safe/backup'
+require File.dirname(__FILE__) + '/safe/backup'
 
-require 'astrails/safe/source'
-require 'astrails/safe/mysqldump'
-require 'astrails/safe/pgdump'
-require 'astrails/safe/archive'
-require 'astrails/safe/svndump'
+require File.dirname(__FILE__) + '/safe/source'
+require File.dirname(__FILE__) + '/safe/mysqldump'
+require File.dirname(__FILE__) + '/safe/pgdump'
+require File.dirname(__FILE__) + '/safe/archive'
+require File.dirname(__FILE__) + '/safe/svndump'
 
-require 'astrails/safe/pipe'
-require 'astrails/safe/gpg'
-require 'astrails/safe/gzip'
+require File.dirname(__FILE__) + '/safe/pipe'
+require File.dirname(__FILE__) + '/safe/gpg'
+require File.dirname(__FILE__) + '/safe/gzip'
 
-require 'astrails/safe/sink'
-require 'astrails/safe/local'
-require 'astrails/safe/s3'
-require 'astrails/safe/sftp'
+require File.dirname(__FILE__) + '/safe/sink'
+require File.dirname(__FILE__) + '/safe/local'
+require File.dirname(__FILE__) + '/safe/s3'
+require File.dirname(__FILE__) + '/safe/sftp'
+
+require File.dirname(__FILE__) + '/safe/rcloud'
 
 module Astrails
   module Safe
@@ -39,8 +44,7 @@ module Astrails
     def safe(&block)
       config = Config::Node.new(&block)
       #config.dump
-
-
+      
       [[Mysqldump, [:mysqldump, :databases]],
        [Pgdump,    [:pgdump,    :databases]],
        [Archive,   [:tar,       :archives]],
@@ -48,7 +52,7 @@ module Astrails
       ].each do |klass, path|
         if collection = config[*path]
           collection.each do |name, config|
-            klass.new(name, config).backup.run(config, :gpg, :gzip, :local, :s3, :sftp)
+            klass.new(name, config).backup.run(config, :gpg, :gzip, :local, :s3, :sftp, :rcloud)
           end
         end
       end
