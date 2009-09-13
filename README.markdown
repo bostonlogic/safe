@@ -128,6 +128,13 @@ Example configuration
       bucket "backup.astrails.com"
       path "servers/alpha/:kind/:id"
     end
+    
+    rcloud do
+      username "username"
+      api_key "key"
+      container "backups"
+      path ":kind/"
+    end
 
     sftp do
       host "sftp.astrails.com"
@@ -146,6 +153,18 @@ Example configuration
     keep do
       local 2
       s3 2
+    end
+    
+    notification do
+      subject "safe backup failure"
+      host "mail.example.com"
+      domain "example.com"
+      username "safe@example.com"
+      password "example"
+      authentication :login
+      port 25
+      from "example@example.com"
+      recipients "developement_staff@example.com"
     end
 
     mysqldump do
