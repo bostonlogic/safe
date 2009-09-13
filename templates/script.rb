@@ -23,6 +23,16 @@ safe do
 
   ## alternative style:
   # s3 :key => YOUR_S3_KEY, :secret => YOUR_S3_SECRET, :bucket => S3_BUCKET, :path => ":kind/"
+  
+  ## uncomment to enable uploads to Rackspace Cloudfiles
+  ## don't forget to add :rcloud to the 'store' list
+  # rcloud do
+  #   username YOUR_RCLOUD_USERNAME
+  #   api_key YOUR_RCLOUD_API_KEY
+  #   container RCLOUD_BUCKET
+  #   # path for uploads to Rackspace Cloudfiles. supports same substitution like :local/:path
+  #   path ":kind/" # unless specified defaults to the local :path if available, then ":kind/"
+  # end
 
   ## uncomment to enable uploads via SFTP
   # sftp do
@@ -44,6 +54,21 @@ safe do
   # keep do
   #   local 4 # keep 4 local backups
   #   s3 20 # keep 20 S3 backups
+  #   rcloud 5 # keep 5 Rackspace Cloudfile backups
+  # end
+  
+  ## uncomment to enable email notification for backup failures
+  ## all options are required
+  # notification do
+  #   subject "safe backup failure"
+  #   host "mail.example.com"
+  #   domain "example.com"
+  #   username "safe@example.com"
+  #   password "example"
+  #   authentication :login
+  #   port 25
+  #   from "example@example.com"
+  #   recipients "developement_staff@example.com"
   # end
 
   # backup mysql databases with mysqldump
